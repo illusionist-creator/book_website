@@ -9,8 +9,13 @@ const timelineDots = document.querySelectorAll(".timeline-dot");
 const timelineProgress = document.querySelector(".timeline-progress");
 const pageCount = document.querySelector(".page-count");
 
-// Create floating elements
+// Check if mobile device
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+// Create floating elements (only on desktop)
 function createFloatingElements() {
+  if (isMobile) return; // Skip on mobile for performance
+  
   const floatingHearts = document.querySelector(".floating-hearts");
   for (let i = 0; i < 6; i++) {
     const element = document.createElement("div");
@@ -49,6 +54,11 @@ function openBook() {
       
       // Animate text on first page
       animatePageText();
+      
+      // Adjust layout for mobile after opening
+      if (isMobile) {
+        document.body.style.overflow = "hidden";
+      }
     }, 500);
   }
 }
@@ -100,7 +110,13 @@ function updateBook() {
     giftBtn.onclick = () => {
       giftBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening...';
       setTimeout(() => {
-        window.open("https://your-gift-link-here.com", "_blank");
+        // Replace with your actual gift link
+        const giftUrl = "https://your-gift-link-here.com";
+        if (isMobile) {
+          window.location.href = giftUrl;
+        } else {
+          window.open(giftUrl, "_blank");
+        }
         giftBtn.innerHTML = '<i class="fas fa-gift"></i> Gift Opened!';
         giftBtn.disabled = true;
       }, 1500);
@@ -124,6 +140,11 @@ function next() {
       currentSpread.classList.remove("flipping");
       current++;
       updateBook();
+      
+      // Scroll to top on mobile when changing pages
+      if (isMobile) {
+        window.scrollTo(0, 0);
+      }
     }, 1200);
   }
 }
@@ -138,17 +159,29 @@ function prev() {
       currentSpread.classList.remove("flipping-back");
       current--;
       updateBook();
+      
+      // Scroll to top on mobile when changing pages
+      if (isMobile) {
+        window.scrollTo(0, 0);
+      }
     }, 1200);
   }
 }
 
 let startX = 0;
+let startY = 0;
 let isAnimating = false;
 
 // Click to open book
 bookCover.addEventListener("click", openBook);
 
-// Mouse controls for book
+// Touch to open book (for mobile)
+bookCover.addEventListener("touchend", (e) => {
+  e.preventDefault();
+  openBook();
+});
+
+// Mouse controls for desktop
 document.addEventListener("mousedown", e => {
   if (!bookOpened) return;
   startX = e.clientX;
@@ -168,29 +201,52 @@ document.addEventListener("mouseup", e => {
   }
 });
 
-// Touch controls
+// Touch controls for mobile
+let touchStartX = 0;
+let touchStartY = 0;
+
 document.addEventListener("touchstart", e => {
   if (!bookOpened) {
     // Open book on first touch if not opened
-    openBook();
     e.preventDefault();
     return;
   }
-  startX = e.touches[0].clientX;
+  
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  
+  // Prevent default to avoid scrolling while interacting with book
+  if (bookOpened) {
+    e.preventDefault();
+  }
 });
+
+document.addEventListener("touchmove", e => {
+  if (!bookOpened) {
+    e.preventDefault();
+  }
+}, { passive: false });
 
 document.addEventListener("touchend", e => {
   if (!bookOpened || isAnimating) return;
   
-  let diff = startX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 60) {
+  const touchEndX = e.changedTouches[0].clientX;
+  const touchEndY = e.changedTouches[0].clientY;
+  
+  const diffX = touchStartX - touchEndX;
+  const diffY = touchStartY - touchEndY;
+  
+  // Only trigger if horizontal swipe is more significant than vertical
+  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
     isAnimating = true;
-    diff > 0 ? next() : prev();
+    diffX > 0 ? next() : prev();
     
     setTimeout(() => {
       isAnimating = false;
     }, 1200);
   }
+  
+  e.preventDefault();
 });
 
 // Keyboard navigation
@@ -198,6 +254,7 @@ document.addEventListener("keydown", e => {
   if (!bookOpened) {
     // Open book with space or enter key
     if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
       openBook();
     }
     return;
@@ -206,15 +263,89 @@ document.addEventListener("keydown", e => {
   if (isAnimating) return;
   
   if (e.key === "ArrowRight" || e.key === " ") {
+    e.preventDefault();
     isAnimating = true;
     next();
     setTimeout(() => { isAnimating = false; }, 1200);
   } else if (e.key === "ArrowLeft") {
+    e.preventDefault();
     isAnimating = true;
     prev();
     setTimeout(() => { isAnimating = false; }, 1200);
   }
 });
 
+// Prevent zoom on double-tap for mobile
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function(event) {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, { passive: false });
+
+// Handle window resize
+let resizeTimeout;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function() {
+    if (bookOpened && isMobile) {
+      // Scroll to top on resize
+      window.scrollTo(0, 0);
+    }
+  }, 250);
+});
+
+// Handle orientation change on mobile
+window.addEventListener('orientationchange', function() {
+  setTimeout(function() {
+    if (bookOpened) {
+      window.scrollTo(0, 0);
+    }
+  }, 500);
+});
+
 // Initialize
 updateBook();
+
+// Add tap areas for mobile navigation
+if (isMobile && bookContainer) {
+  // Add tap areas for easier navigation on mobile
+  setTimeout(() => {
+    const book = document.querySelector('.book');
+    
+    // Create left tap area
+    const leftTapArea = document.createElement('div');
+    leftTapArea.style.position = 'absolute';
+    leftTapArea.style.left = '0';
+    leftTapArea.style.top = '0';
+    leftTapArea.style.width = '30%';
+    leftTapArea.style.height = '100%';
+    leftTapArea.style.zIndex = '10';
+    leftTapArea.style.cursor = 'pointer';
+    leftTapArea.addEventListener('click', () => prev());
+    leftTapArea.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      prev();
+    });
+    
+    // Create right tap area
+    const rightTapArea = document.createElement('div');
+    rightTapArea.style.position = 'absolute';
+    rightTapArea.style.right = '0';
+    rightTapArea.style.top = '0';
+    rightTapArea.style.width = '30%';
+    rightTapArea.style.height = '100%';
+    rightTapArea.style.zIndex = '10';
+    rightTapArea.style.cursor = 'pointer';
+    rightTapArea.addEventListener('click', () => next());
+    rightTapArea.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      next();
+    });
+    
+    book.appendChild(leftTapArea);
+    book.appendChild(rightTapArea);
+  }, 1000);
+}
