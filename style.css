@@ -424,7 +424,7 @@ body {
 
 /* Make left page content fit without scrolling */
 .page.left .content {
-  justify-content: flex-start;
+  justify-content: center; /* Changed from flex-start to center */
   padding-top: 30px;
   overflow-y: auto;
   max-height: 100%;
@@ -785,6 +785,7 @@ button:disabled {
     padding: 5px;
     align-items: flex-start;
     padding-top: 20px;
+    justify-content: center;
   }
   
   /* Hide floating hearts on mobile for performance */
@@ -861,80 +862,94 @@ button:disabled {
   /* Book container for mobile */
   .book-container {
     padding: 5px;
-    height: auto;
+    height: 100vh;
     min-height: 100vh;
-    align-items: flex-start;
-    padding-top: 10px;
+    align-items: center;
+    justify-content: center;
+    display: none;
   }
   
   /* Book adjustments for mobile */
   .book {
     width: 100vw;
-    height: auto;
-    min-height: 90vh;
+    height: 100vh;
     max-width: 100%;
-    perspective: 1000px;
+    perspective: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   
-  /* Spread layout for mobile - vertical layout */
+  /* Spread layout for mobile - single page view */
   .spread {
     flex-direction: column;
-    height: auto;
-    min-height: 90vh;
-    gap: 10px;
+    height: 85vh;
+    width: 95vw;
+    margin: 0 auto;
+    position: relative;
+    opacity: 1;
+    transform: none !important;
   }
   
-  /* Page adjustments for mobile */
-  .page {
+  /* Hide right pages on mobile (show only left pages) */
+  .page.right {
+    display: none !important;
+  }
+  
+  /* Center left page on mobile */
+  .page.left {
     width: 100%;
-    height: 45vh;
-    min-height: 45vh;
+    height: 85vh;
+    min-height: 85vh;
     padding: 20px 15px;
     border-radius: 8px !important;
-    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transform: none !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
   
-  .page.left {
-    border-radius: 8px 8px 0 0 !important;
-    transform-origin: bottom center;
-    order: 1;
-  }
-  
-  .page.right {
-    border-radius: 0 0 8px 8px !important;
-    transform-origin: top center;
-    order: 2;
-  }
-  
-  /* Content adjustments for mobile */
+  /* Content adjustments for mobile - CENTERED */
   .content {
     max-width: 100%;
     padding: 10px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center;
   }
   
-  /* Left page content */
+  /* Left page content - CENTERED */
   .page.left .content {
-    padding-top: 15px;
+    padding-top: 0;
     overflow-y: auto;
-    max-height: 42vh;
+    max-height: 80vh;
+    justify-content: center; /* Center vertically */
+    align-items: center;
   }
   
   .page-header {
     font-size: 1.6rem;
     margin-bottom: 15px;
     padding-bottom: 8px;
+    text-align: center;
   }
   
   .page-text {
     font-size: 0.95rem;
     line-height: 1.5;
-    margin: 8px 0;
+    margin: 10px 0;
+    text-align: center;
   }
   
   .page-text.italic {
     font-size: 1rem;
+    text-align: center;
   }
   
   /* Adjust star divider */
@@ -943,13 +958,23 @@ button:disabled {
     font-size: 1rem;
     letter-spacing: 10px;
     gap: 8px;
+    justify-content: center;
   }
   
-  /* Admiration grid for mobile */
+  /* Admiration grid for mobile - centered */
   .admire-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     margin: 15px 0;
+    max-width: 300px;
+    justify-items: center;
+  }
+  
+  .admire-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
   }
   
   .admire-item i {
@@ -958,17 +983,19 @@ button:disabled {
   
   .admire-item span {
     font-size: 0.8rem;
+    text-align: center;
   }
   
   /* Quote box */
   .quote-box {
     padding: 15px;
     margin: 15px 0;
-    max-width: 100%;
+    max-width: 90%;
   }
   
   .quote-text {
     font-size: 0.9rem;
+    text-align: center;
   }
   
   /* Gift illustration */
@@ -984,7 +1011,8 @@ button:disabled {
   .final-message {
     font-size: 0.9rem;
     margin: 15px 0;
-    max-width: 100%;
+    max-width: 90%;
+    text-align: center;
   }
   
   /* Heart circle */
@@ -998,6 +1026,7 @@ button:disabled {
   .final-content h2 {
     font-size: 1.4rem;
     margin-bottom: 15px;
+    text-align: center;
   }
   
   /* Buttons */
@@ -1010,12 +1039,12 @@ button:disabled {
   
   /* Timeline adjustments */
   .timeline {
-    position: relative;
-    bottom: auto;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    width: 90%;
-    left: 5%;
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 0 10px;
   }
   
   .timeline-dot {
@@ -1037,24 +1066,29 @@ button:disabled {
   .navigation-hint {
     font-size: 0.75rem;
     gap: 8px;
+    display: none; /* Hide on mobile to save space */
   }
   
   /* Swipe hint */
   .swipe-hint {
     margin-top: 15px;
     font-size: 0.8rem;
+    position: absolute;
+    bottom: 80px;
+    width: 100%;
   }
   
+  /* Hide blank pages on mobile */
   .blank-message {
-    margin-top: -20px;
+    display: none;
   }
   
-  .blank-message i {
-    font-size: 1.5rem;
-  }
-  
-  .blank-message p {
-    font-size: 0.9rem;
+  /* Text group adjustments */
+  .text-group {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -1073,14 +1107,10 @@ button:disabled {
     letter-spacing: 3px;
   }
   
-  .page {
+  .page.left {
+    height: 80vh;
+    min-height: 80vh;
     padding: 15px 10px;
-    height: 40vh;
-    min-height: 40vh;
-  }
-  
-  .page.left .content {
-    max-height: 38vh;
   }
   
   .page-header {
@@ -1094,6 +1124,7 @@ button:disabled {
   .admire-grid {
     grid-template-columns: 1fr;
     gap: 10px;
+    max-width: 200px;
   }
   
   .star-divider {
@@ -1109,6 +1140,10 @@ button:disabled {
   
   .gift-box {
     font-size: 2rem;
+  }
+  
+  .timeline {
+    bottom: 10px;
   }
 }
 
@@ -1135,21 +1170,46 @@ button:disabled {
     font-size: 1.8rem;
   }
   
-  .page {
-    height: 35vh;
-    min-height: 35vh;
+  .page.left {
+    height: 90vh;
+    min-height: 90vh;
   }
   
   .page.left .content {
-    max-height: 32vh;
+    max-height: 85vh;
   }
   
   .cover-message {
     padding: 10px;
+  }
+  
+  .timeline {
+    bottom: 10px;
   }
 }
 
 /* Prevent pull-to-refresh on mobile */
 body {
   overscroll-behavior: none;
+}
+
+/* Spread states for mobile */
+@media (max-width: 768px) {
+  .spread.active {
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .spread:not(.active) {
+    opacity: 0;
+    display: none;
+  }
+  
+  .spread.passed {
+    opacity: 0;
+    display: none;
+  }
 }
