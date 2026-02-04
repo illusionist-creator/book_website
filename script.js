@@ -58,6 +58,8 @@ function openBook() {
       // Adjust layout for mobile after opening
       if (isMobile) {
         document.body.style.overflow = "hidden";
+        // Scroll to top
+        window.scrollTo(0, 0);
       }
     }, 500);
   }
@@ -128,43 +130,72 @@ function updateBook() {
   
   // Animate text on new page
   setTimeout(animatePageText, 300);
+  
+  // Scroll to top on mobile
+  if (isMobile) {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  }
 }
 
 // Next page
 function next() {
   if (current < spreads.length - 1) {
-    const currentSpread = spreads[current];
-    currentSpread.classList.add("flipping");
-    
-    setTimeout(() => {
-      currentSpread.classList.remove("flipping");
-      current++;
-      updateBook();
+    if (isMobile) {
+      // Simple fade transition for mobile
+      const currentSpread = spreads[current];
+      currentSpread.style.opacity = "0";
+      currentSpread.style.transition = "opacity 0.5s";
       
-      // Scroll to top on mobile when changing pages
-      if (isMobile) {
-        window.scrollTo(0, 0);
-      }
-    }, 1200);
+      setTimeout(() => {
+        current++;
+        updateBook();
+        const newSpread = spreads[current];
+        newSpread.style.opacity = "1";
+        newSpread.style.transition = "opacity 0.5s";
+      }, 300);
+    } else {
+      // Desktop flipping animation
+      const currentSpread = spreads[current];
+      currentSpread.classList.add("flipping");
+      
+      setTimeout(() => {
+        currentSpread.classList.remove("flipping");
+        current++;
+        updateBook();
+      }, 1200);
+    }
   }
 }
 
 // Previous page
 function prev() {
   if (current > 0) {
-    const currentSpread = spreads[current];
-    currentSpread.classList.add("flipping-back");
-    
-    setTimeout(() => {
-      currentSpread.classList.remove("flipping-back");
-      current--;
-      updateBook();
+    if (isMobile) {
+      // Simple fade transition for mobile
+      const currentSpread = spreads[current];
+      currentSpread.style.opacity = "0";
+      currentSpread.style.transition = "opacity 0.5s";
       
-      // Scroll to top on mobile when changing pages
-      if (isMobile) {
-        window.scrollTo(0, 0);
-      }
-    }, 1200);
+      setTimeout(() => {
+        current--;
+        updateBook();
+        const newSpread = spreads[current];
+        newSpread.style.opacity = "1";
+        newSpread.style.transition = "opacity 0.5s";
+      }, 300);
+    } else {
+      // Desktop flipping animation
+      const currentSpread = spreads[current];
+      currentSpread.classList.add("flipping-back");
+      
+      setTimeout(() => {
+        currentSpread.classList.remove("flipping-back");
+        current--;
+        updateBook();
+      }, 1200);
+    }
   }
 }
 
@@ -219,12 +250,6 @@ document.addEventListener("touchstart", e => {
   if (bookOpened) {
     e.preventDefault();
   }
-});
-
-document.addEventListener("touchmove", e => {
-  if (!bookOpened) {
-    e.preventDefault();
-  }
 }, { passive: false });
 
 document.addEventListener("touchend", e => {
@@ -243,7 +268,7 @@ document.addEventListener("touchend", e => {
     
     setTimeout(() => {
       isAnimating = false;
-    }, 1200);
+    }, 800);
   }
   
   e.preventDefault();
@@ -266,12 +291,12 @@ document.addEventListener("keydown", e => {
     e.preventDefault();
     isAnimating = true;
     next();
-    setTimeout(() => { isAnimating = false; }, 1200);
+    setTimeout(() => { isAnimating = false; }, isMobile ? 800 : 1200);
   } else if (e.key === "ArrowLeft") {
     e.preventDefault();
     isAnimating = true;
     prev();
-    setTimeout(() => { isAnimating = false; }, 1200);
+    setTimeout(() => { isAnimating = false; }, isMobile ? 800 : 1200);
   }
 });
 
@@ -315,37 +340,46 @@ if (isMobile && bookContainer) {
   setTimeout(() => {
     const book = document.querySelector('.book');
     
-    // Create left tap area
+    // Create left tap area (20% of screen width)
     const leftTapArea = document.createElement('div');
     leftTapArea.style.position = 'absolute';
     leftTapArea.style.left = '0';
     leftTapArea.style.top = '0';
-    leftTapArea.style.width = '30%';
+    leftTapArea.style.width = '20%';
     leftTapArea.style.height = '100%';
-    leftTapArea.style.zIndex = '10';
+    leftTapArea.style.zIndex = '100';
     leftTapArea.style.cursor = 'pointer';
-    leftTapArea.addEventListener('click', () => prev());
-    leftTapArea.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      prev();
+    leftTapArea.addEventListener('click', () => {
+      if (!isAnimating) {
+        isAnimating = true;
+        prev();
+        setTimeout(() => { isAnimating = false; }, 800);
+      }
     });
     
-    // Create right tap area
+    // Create right tap area (20% of screen width)
     const rightTapArea = document.createElement('div');
     rightTapArea.style.position = 'absolute';
     rightTapArea.style.right = '0';
     rightTapArea.style.top = '0';
-    rightTapArea.style.width = '30%';
+    rightTapArea.style.width = '20%';
     rightTapArea.style.height = '100%';
-    rightTapArea.style.zIndex = '10';
+    rightTapArea.style.zIndex = '100';
     rightTapArea.style.cursor = 'pointer';
-    rightTapArea.addEventListener('click', () => next());
-    rightTapArea.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      next();
+    rightTapArea.addEventListener('click', () => {
+      if (!isAnimating) {
+        isAnimating = true;
+        next();
+        setTimeout(() => { isAnimating = false; }, 800);
+      }
     });
     
     book.appendChild(leftTapArea);
     book.appendChild(rightTapArea);
   }, 1000);
+}
+
+// Add visual feedback for mobile taps
+if (isMobile) {
+  document.addEventListener('touchstart', function() {}, {passive: true});
 }
