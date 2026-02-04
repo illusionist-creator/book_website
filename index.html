@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For You</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="starry-bg"></div>
+<div class="floating-hearts"></div>
+
+<!-- Closed Book Cover -->
+<div class="book-cover" id="bookCover">
+  <div class="cover-front">
+    <div class="cover-design">
+      <div class="cover-title">For You</div>
+      <div class="cover-subtitle">A digital book of unspoken</div>
+      <div class="cover-logo">APPRECIATION</div>
+      <div class="cover-message">
+        <p class="cover-line">All this because you matter.</p>
+        <p class="cover-line">It's appreciation, it's love,</p>
+        <p class="cover-line">it's everything I maybe could not say.</p>
+      </div>
+    </div>
+    <div class="cover-instruction">
+      <div class="instruction-text">
+        <i class="fas fa-hand-point-up"></i>
+        <p>Click or swipe to open</p>
+      </div>
+    </div>
+  </div>
+  <div class="cover-spine">
+    <span class="spine-text">I have poured my heart into it I hope you like it</span>
+  </div>
+</div>
+
+<!-- Book Content (hidden initially) -->
+<div class="book-container" id="bookContainer" style="display: none;">
+  <div class="book">
+    <!-- INTRO Spread -->
+    <div class="spread active">
+      <div class="page left">
+        <div class="content">
+          <div class="page-header">INTRO</div>
+          <div class="text-group">
+            <p class="page-text">Please read this slowly.</p>
+            <p class="page-text">I made this for you.</p>
+          </div>
+          <div class="star-divider">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="text-group">
+            <p class="page-text">A message in digital pages,</p>
+            <p class="page-text">Just for your eyes.</p>
+          </div>
+          <div class="swipe-hint">
+            <i class="fas fa-hand-point-right"></i>
+            <span>Swipe to turn pages →</span>
+          </div>
+        </div>
+      </div>
+      <div class="page right blank-page">
+        <div class="content">
+          <div class="blank-message">
+            <i class="fas fa-pen-nib"></i>
+            <p>Your space to write...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE WHY Spread -->
+    <div class="spread">
+      <div class="page left">
+        <div class="content">
+          <div class="page-header">THE WHY</div>
+          <div class="text-group">
+            <p class="page-text">I've tried saying some of this out loud.</p>
+            <p class="page-text">I never found the right words.</p>
+            <p class="page-text">So I wrote them here instead.</p>
+          </div>
+          <div class="star-divider">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="text-group">
+            <p class="page-text">Words are sometimes hard,</p>
+            <p class="page-text">But feelings are clear.</p>
+          </div>
+          <div class="quote-box">
+            <p class="quote-text">Some things are better written than said.</p>
+          </div>
+        </div>
+      </div>
+      <div class="page right blank-page">
+        <div class="content">
+          <div class="blank-message">
+            <i class="fas fa-pen-nib"></i>
+            <p>Your space to write...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIRATION Spread -->
+    <div class="spread">
+      <div class="page left">
+        <div class="content">
+          <div class="page-header">ADMIRATION</div>
+          <div class="text-group">
+            <p class="page-text italic">"I admire you more than I say."</p>
+            <p class="page-text">The way you think.</p>
+            <p class="page-text">The way you stay kind.</p>
+          </div>
+          <div class="star-divider">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="text-group">
+            <p class="page-text">The way you make ordinary moments</p>
+            <p class="page-text">feel extraordinary.</p>
+          </div>
+          <div class="admire-grid">
+            <div class="admire-item">
+              <i class="fas fa-sun"></i>
+              <span>Your Light</span>
+            </div>
+            <div class="admire-item">
+              <i class="fas fa-heart"></i>
+              <span>Your Heart</span>
+            </div>
+            <div class="admire-item">
+              <i class="fas fa-brain"></i>
+              <span>Your Mind</span>
+            </div>
+            <div class="admire-item">
+              <i class="fas fa-smile"></i>
+              <span>Your Smile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="page right blank-page">
+        <div class="content">
+          <div class="blank-message">
+            <i class="fas fa-pen-nib"></i>
+            <p>Your space to write...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE GIFT Spread -->
+    <div class="spread">
+      <div class="page left">
+        <div class="content">
+          <div class="page-header">THE GIFT</div>
+          <div class="text-group">
+            <p class="page-text">There is one last thing.</p>
+          </div>
+          <div class="gift-illustration">
+            <div class="gift-box">
+              <i class="fas fa-gift"></i>
+            </div>
+          </div>
+          <p class="final-message">It's maybe last thing here but please stay with me forever the way you are</p>
+          <div class="star-divider">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+        </div>
+      </div>
+      <div class="page right">
+        <div class="content">
+          <div class="final-content">
+            <div class="heart-circle">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h2>FOR YOU</h2>
+            <div class="text-group">
+              <p class="page-text">This is more than a gift,</p>
+              <p class="page-text">it's a promise.</p>
+            </div>
+            <button id="giftBtn" disabled>
+              <i class="fas fa-gift"></i> OPEN GIFT
+            </button>
+            <p class="instruction">Click when you're ready</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Timeline/Progress Indicator -->
+    <div class="timeline">
+      <div class="timeline-track">
+        <div class="timeline-progress"></div>
+        <div class="timeline-dots">
+          <span class="timeline-dot active">✦</span>
+          <span class="timeline-dot">✦</span>
+          <span class="timeline-dot">✦</span>
+          <span class="timeline-dot">✦</span>
+        </div>
+      </div>
+      <div class="timeline-text">
+        <span class="page-count">1 of 4</span>
+        <div class="navigation-hint">
+          <i class="fas fa-arrow-left"></i>
+          <span>Swipe to navigate</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
