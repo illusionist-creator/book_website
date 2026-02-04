@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>For You</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -29,7 +31,7 @@
     <div class="cover-instruction">
       <div class="instruction-text">
         <i class="fas fa-hand-point-up"></i>
-        <p>Click or swipe to open</p>
+        <p>Tap to open</p>
       </div>
     </div>
   </div>
@@ -39,7 +41,7 @@
 </div>
 
 <!-- Book Content (hidden initially) -->
-<div class="book-container" id="bookContainer" style="display: none;">
+<div class="book-container" id="bookContainer">
   <div class="book">
     <!-- INTRO Spread -->
     <div class="spread active">
@@ -197,7 +199,7 @@
             <button id="giftBtn" disabled>
               <i class="fas fa-gift"></i> OPEN GIFT
             </button>
-            <p class="instruction">Click when you're ready</p>
+            <p class="instruction">Tap when you're ready</p>
           </div>
         </div>
       </div>
