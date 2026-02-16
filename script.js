@@ -4,7 +4,6 @@ let bookOpened = false;
 const bookCover = document.getElementById("bookCover");
 const bookContainer = document.getElementById("bookContainer");
 const spreads = document.querySelectorAll(".spread");
-const giftBtn = document.getElementById("giftBtn");
 const timelineDots = document.querySelectorAll(".timeline-dot");
 const timelineProgress = document.querySelector(".timeline-progress");
 const pageCount = document.querySelector(".page-count");
@@ -14,7 +13,7 @@ const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/
 
 // Create floating elements (only on desktop)
 function createFloatingElements() {
-  if (isMobile) return; // Skip on mobile for performance
+  if (isMobile) return;
   
   const floatingHearts = document.querySelector(".floating-hearts");
   for (let i = 0; i < 6; i++) {
@@ -38,28 +37,16 @@ createFloatingElements();
 function openBook() {
   if (!bookOpened) {
     bookOpened = true;
-    
-    // Animate cover closing
     bookCover.style.animation = "bookAppear 0.5s reverse forwards";
     
     setTimeout(() => {
       bookCover.style.display = "none";
       bookContainer.style.display = "flex";
-      
-      // Add entrance animation
       bookContainer.style.animation = "containerAppear 1s ease-out";
-      
-      // Initialize the book
       updateBook();
-      
-      // Animate text on first page
       animatePageText();
-      
-      // Adjust layout for mobile after opening
       if (isMobile) {
         document.body.style.overflow = "hidden";
-        // Scroll to top
-        window.scrollTo(0, 0);
       }
     }, 500);
   }
@@ -106,101 +93,45 @@ function updateBook() {
   // Update page counter
   pageCount.textContent = `${current + 1} of ${spreads.length}`;
 
-  // Activate Gift Button on last page
-  if (current === spreads.length - 1) {
-    giftBtn.disabled = false;
-    giftBtn.onclick = () => {
-      giftBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening...';
-      setTimeout(() => {
-        // Replace with your actual gift link
-        const giftUrl = "https://your-gift-link-here.com";
-        if (isMobile) {
-          window.location.href = giftUrl;
-        } else {
-          window.open(giftUrl, "_blank");
-        }
-        giftBtn.innerHTML = '<i class="fas fa-gift"></i> Gift Opened!';
-        giftBtn.disabled = true;
-      }, 1500);
-    };
-  } else {
-    giftBtn.disabled = true;
-    giftBtn.innerHTML = '<i class="fas fa-gift"></i> OPEN GIFT';
-  }
-  
   // Animate text on new page
   setTimeout(animatePageText, 300);
-  
-  // Scroll to top on mobile
-  if (isMobile) {
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
-  }
 }
 
 // Next page
 function next() {
   if (current < spreads.length - 1) {
-    if (isMobile) {
-      // Simple fade transition for mobile
-      const currentSpread = spreads[current];
-      currentSpread.style.opacity = "0";
-      currentSpread.style.transition = "opacity 0.5s";
-      
-      setTimeout(() => {
-        current++;
-        updateBook();
-        const newSpread = spreads[current];
-        newSpread.style.opacity = "1";
-        newSpread.style.transition = "opacity 0.5s";
-      }, 300);
-    } else {
-      // Desktop flipping animation
-      const currentSpread = spreads[current];
-      currentSpread.classList.add("flipping");
-      
-      setTimeout(() => {
-        currentSpread.classList.remove("flipping");
-        current++;
-        updateBook();
-      }, 1200);
-    }
+    const currentSpread = spreads[current];
+    currentSpread.classList.add("flipping");
+    
+    setTimeout(() => {
+      currentSpread.classList.remove("flipping");
+      current++;
+      updateBook();
+      if (isMobile) {
+        window.scrollTo(0, 0);
+      }
+    }, 1200);
   }
 }
 
 // Previous page
 function prev() {
   if (current > 0) {
-    if (isMobile) {
-      // Simple fade transition for mobile
-      const currentSpread = spreads[current];
-      currentSpread.style.opacity = "0";
-      currentSpread.style.transition = "opacity 0.5s";
-      
-      setTimeout(() => {
-        current--;
-        updateBook();
-        const newSpread = spreads[current];
-        newSpread.style.opacity = "1";
-        newSpread.style.transition = "opacity 0.5s";
-      }, 300);
-    } else {
-      // Desktop flipping animation
-      const currentSpread = spreads[current];
-      currentSpread.classList.add("flipping-back");
-      
-      setTimeout(() => {
-        currentSpread.classList.remove("flipping-back");
-        current--;
-        updateBook();
-      }, 1200);
-    }
+    const currentSpread = spreads[current];
+    currentSpread.classList.add("flipping-back");
+    
+    setTimeout(() => {
+      currentSpread.classList.remove("flipping-back");
+      current--;
+      updateBook();
+      if (isMobile) {
+        window.scrollTo(0, 0);
+      }
+    }, 1200);
   }
 }
 
 let startX = 0;
-let startY = 0;
 let isAnimating = false;
 
 // Click to open book
@@ -225,10 +156,7 @@ document.addEventListener("mouseup", e => {
   if (Math.abs(diff) > 60) {
     isAnimating = true;
     diff > 0 ? next() : prev();
-    
-    setTimeout(() => {
-      isAnimating = false;
-    }, 1200);
+    setTimeout(() => { isAnimating = false; }, 1200);
   }
 });
 
@@ -238,16 +166,18 @@ let touchStartY = 0;
 
 document.addEventListener("touchstart", e => {
   if (!bookOpened) {
-    // Open book on first touch if not opened
     e.preventDefault();
     return;
   }
-  
   touchStartX = e.touches[0].clientX;
   touchStartY = e.touches[0].clientY;
-  
-  // Prevent default to avoid scrolling while interacting with book
   if (bookOpened) {
+    e.preventDefault();
+  }
+});
+
+document.addEventListener("touchmove", e => {
+  if (!bookOpened) {
     e.preventDefault();
   }
 }, { passive: false });
@@ -257,46 +187,38 @@ document.addEventListener("touchend", e => {
   
   const touchEndX = e.changedTouches[0].clientX;
   const touchEndY = e.changedTouches[0].clientY;
-  
   const diffX = touchStartX - touchEndX;
   const diffY = touchStartY - touchEndY;
   
-  // Only trigger if horizontal swipe is more significant than vertical
   if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
     isAnimating = true;
     diffX > 0 ? next() : prev();
-    
-    setTimeout(() => {
-      isAnimating = false;
-    }, 800);
+    setTimeout(() => { isAnimating = false; }, 1200);
   }
-  
   e.preventDefault();
 });
 
 // Keyboard navigation
 document.addEventListener("keydown", e => {
   if (!bookOpened) {
-    // Open book with space or enter key
     if (e.key === " " || e.key === "Enter") {
       e.preventDefault();
       openBook();
     }
     return;
   }
-  
   if (isAnimating) return;
   
   if (e.key === "ArrowRight" || e.key === " ") {
     e.preventDefault();
     isAnimating = true;
     next();
-    setTimeout(() => { isAnimating = false; }, isMobile ? 800 : 1200);
+    setTimeout(() => { isAnimating = false; }, 1200);
   } else if (e.key === "ArrowLeft") {
     e.preventDefault();
     isAnimating = true;
     prev();
-    setTimeout(() => { isAnimating = false; }, isMobile ? 800 : 1200);
+    setTimeout(() => { isAnimating = false; }, 1200);
   }
 });
 
@@ -316,7 +238,6 @@ window.addEventListener('resize', function() {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(function() {
     if (bookOpened && isMobile) {
-      // Scroll to top on resize
       window.scrollTo(0, 0);
     }
   }, 250);
@@ -336,42 +257,35 @@ updateBook();
 
 // Add tap areas for mobile navigation
 if (isMobile && bookContainer) {
-  // Add tap areas for easier navigation on mobile
   setTimeout(() => {
     const book = document.querySelector('.book');
     
-    // Create left tap area (20% of screen width)
     const leftTapArea = document.createElement('div');
     leftTapArea.style.position = 'absolute';
     leftTapArea.style.left = '0';
     leftTapArea.style.top = '0';
-    leftTapArea.style.width = '20%';
+    leftTapArea.style.width = '30%';
     leftTapArea.style.height = '100%';
-    leftTapArea.style.zIndex = '100';
+    leftTapArea.style.zIndex = '10';
     leftTapArea.style.cursor = 'pointer';
-    leftTapArea.addEventListener('click', () => {
-      if (!isAnimating) {
-        isAnimating = true;
-        prev();
-        setTimeout(() => { isAnimating = false; }, 800);
-      }
+    leftTapArea.addEventListener('click', () => prev());
+    leftTapArea.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      prev();
     });
     
-    // Create right tap area (20% of screen width)
     const rightTapArea = document.createElement('div');
     rightTapArea.style.position = 'absolute';
     rightTapArea.style.right = '0';
     rightTapArea.style.top = '0';
-    rightTapArea.style.width = '20%';
+    rightTapArea.style.width = '30%';
     rightTapArea.style.height = '100%';
-    rightTapArea.style.zIndex = '100';
+    rightTapArea.style.zIndex = '10';
     rightTapArea.style.cursor = 'pointer';
-    rightTapArea.addEventListener('click', () => {
-      if (!isAnimating) {
-        isAnimating = true;
-        next();
-        setTimeout(() => { isAnimating = false; }, 800);
-      }
+    rightTapArea.addEventListener('click', () => next());
+    rightTapArea.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      next();
     });
     
     book.appendChild(leftTapArea);
@@ -379,7 +293,52 @@ if (isMobile && bookContainer) {
   }, 1000);
 }
 
-// Add visual feedback for mobile taps
-if (isMobile) {
-  document.addEventListener('touchstart', function() {}, {passive: true});
+// Sparkle effect for special messages and name
+function createSparkles(x, y) {
+  for (let i = 0; i < 8; i++) {
+    const spark = document.createElement('div');
+    spark.innerHTML = '✦';
+    spark.style.position = 'fixed';
+    spark.style.left = x + 'px';
+    spark.style.top = y + 'px';
+    spark.style.color = ['#d4af37', '#d4a5a5', '#ffffff'][Math.floor(Math.random() * 3)];
+    spark.style.fontSize = Math.random() * 20 + 10 + 'px';
+    spark.style.pointerEvents = 'none';
+    spark.style.zIndex = '9999';
+    spark.style.transition = 'all 1s ease-out';
+    spark.style.textShadow = '0 0 5px gold';
+    document.body.appendChild(spark);
+    
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * 100 + 50;
+    const destX = x + Math.cos(angle) * distance;
+    const destY = y - Math.random() * 100 - 50; // upward mostly
+    
+    setTimeout(() => {
+      spark.style.transform = `translate(${destX - x}px, ${destY - y}px) rotate(${Math.random() * 360}deg)`;
+      spark.style.opacity = '0';
+    }, 10);
+    
+    setTimeout(() => {
+      spark.remove();
+    }, 1000);
+  }
 }
+
+// Event listeners for sparkles
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('name') || e.target.classList.contains('special-message')) {
+    const rect = e.target.getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    createSparkles(x, y);
+  }
+});
+
+document.addEventListener('touchstart', function(e) {
+  if (e.target.classList.contains('name') || e.target.classList.contains('special-message')) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    createSparkles(touch.clientX, touch.clientY);
+  }
+});
