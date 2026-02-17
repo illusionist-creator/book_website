@@ -3,6 +3,7 @@ let current = 0;
 let bookOpened = false;
 const bookCover = document.getElementById("bookCover");
 const bookContainer = document.getElementById("bookContainer");
+const endCover = document.querySelector(".spread.end-cover");
 const spreads = document.querySelectorAll(".spread");
 const timelineDots = document.querySelectorAll(".timeline-dot");
 const timelineProgress = document.querySelector(".timeline-progress");
@@ -32,6 +33,35 @@ function createFloatingElements() {
 }
 
 createFloatingElements();
+
+function closeBook() {
+
+  bookContainer.style.animation = "containerAppear 0.5s reverse forwards";
+
+  setTimeout(() => {
+
+    bookContainer.style.display = "none";
+
+    bookCover.style.display = "flex";
+    bookCover.style.animation = "bookAppear 1.5s ease-out";
+
+    spreads.forEach((spread, index) => {
+      spread.classList.remove("active", "passed", "flipping", "flipping-back");
+      if (index === 0) {
+        spread.classList.add("active");
+      }
+    });
+
+    document.querySelectorAll(".timeline-dot").forEach((dot, i) => {
+      dot.classList.remove("active");
+      if (i === 0) dot.classList.add("active");
+    });
+
+    document.querySelector(".timeline-progress").style.width = "0%";
+    document.querySelector(".page-count").textContent = "1 of 7";
+
+  }, 500);
+}
 
 // Open the book
 function openBook() {
@@ -340,5 +370,11 @@ document.addEventListener('touchstart', function(e) {
     e.preventDefault();
     const touch = e.touches[0];
     createSparkles(touch.clientX, touch.clientY);
+  }
+});
+
+endCover.addEventListener("click", () => {
+  if (endCover.classList.contains("active")) {
+    closeBook();
   }
 });
