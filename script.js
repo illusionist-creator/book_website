@@ -85,13 +85,19 @@ function openBook() {
 // Animate text on current page
 function animatePageText() {
   const currentSpread = spreads[current];
-  const pageTexts = currentSpread.querySelectorAll(".page-text");
+  // Select both regular page text and cover lines
+  const textElements = currentSpread.querySelectorAll(".page-text, .cover-line");
   
-  pageTexts.forEach((text, index) => {
-    text.style.animation = "none";
+  // Determine animation speed based on whether it's the last spread
+  const isLastSpread = (current === spreads.length - 1);
+  const duration = isLastSpread ? 2 : 1; // seconds
+  const delayBetween = isLastSpread ? 0.6 : 0.3; // seconds
+  
+  textElements.forEach((el, index) => {
+    el.style.animation = "none";
     setTimeout(() => {
-      text.style.animation = `textFadeIn 1s forwards`;
-      text.style.animationDelay = `${index * 0.3}s`;
+      el.style.animation = `textFadeIn ${duration}s forwards`;
+      el.style.animationDelay = `${index * delayBetween}s`;
     }, 100);
   });
 }
