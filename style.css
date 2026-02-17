@@ -602,7 +602,257 @@ body {
 }
 
 /* ====================
-   MOBILE RESPONSIVENESS
+   END COVER - EXACTLY LIKE FRONT COVER
+   ==================== */
+.spread.end-cover {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Make the active end cover clickable and smooth */
+.spread.end-cover.active {
+  width: 95vw;
+  max-width: 800px;
+  height: 85vh;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  animation: bookAppear 1.5s ease-out;
+}
+
+.spread.end-cover.active:hover {
+  transform: scale(1.01);
+}
+
+.spread.end-cover.active ~ .timeline {
+  display: none;
+}
+
+/* Left page = cover front */
+.spread.end-cover .page.left {
+  flex: 1;
+  background: linear-gradient(145deg, #1a1a2e, #16213e);
+  border-radius: 8px 0 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;                /* match front cover padding */
+  position: relative;
+  overflow: hidden;
+  color: white;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); /* same shadow */
+}
+
+/* Radial overlay (same as front cover) */
+.spread.end-cover .page.left::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(212, 165, 165, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Content inside left page - ensure full height for centering */
+.spread.end-cover .page.left .content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;             /* same as .cover-design max-width */
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  padding: 0;
+  height: 100%;                 /* use full parent height */
+  min-height: 100%;             /* fallback */
+}
+
+/* Reuse front cover typography classes */
+.spread.end-cover .cover-title {
+  color: #d4a5a5;
+  font-size: 3.5rem;            /* match front cover */
+  margin-bottom: 15px;
+  text-shadow: 0 2px 10px rgba(212, 165, 165, 0.3);
+  letter-spacing: 2px;
+  line-height: 1.2;
+}
+
+.spread.end-cover .cover-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1.4;
+}
+
+.spread.end-cover .cover-logo {
+  color: #d4af37;
+  font-size: 2.5rem;
+  margin: 30px 0;
+  letter-spacing: 10px;
+  position: relative;
+  display: inline-block;
+  padding: 0 20px;
+}
+
+.spread.end-cover .cover-logo::before,
+.spread.end-cover .cover-logo::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #d4a5a5;
+  font-size: 1.2rem;
+}
+
+.spread.end-cover .cover-logo::before {
+  left: -10px;
+}
+
+.spread.end-cover .cover-logo::after {
+  right: -10px;
+}
+
+.spread.end-cover .cover-message {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 165, 165, 0.2);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 25px;
+  margin-top: 40px;
+}
+
+.spread.end-cover .cover-line {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.3rem;
+  margin: 12px 0;
+  opacity: 0;
+  animation: textFadeIn 2s forwards;
+}
+
+.spread.end-cover .cover-line:nth-child(1) { animation-delay: 0.5s; }
+.spread.end-cover .cover-line:nth-child(2) { animation-delay: 1.5s; }
+.spread.end-cover .cover-line:nth-child(3) { animation-delay: 2.5s; }
+
+/* Right page = spine (exactly 40px wide) */
+.spread.end-cover .page.right {
+  width: 40px;
+  flex: 0 0 40px;
+  background: linear-gradient(to right, #151525, #1a1a2e);
+  border-radius: 0 8px 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  position: relative;
+  padding: 0;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Spine text */
+.spread.end-cover .page.right .spine-text {
+  color: rgba(212, 165, 165, 0.7);
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Remove default page background for spine */
+.spread.end-cover .page.right::before {
+  display: none;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .spread.end-cover {
+    flex-direction: column;
+  }
+  .spread.end-cover .page.left {
+    border-radius: 8px 8px 0 0 !important;
+    flex: none;
+    height: auto;
+    min-height: 45vh;
+    padding: 25px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Reset height on mobile so content can scroll naturally */
+  .spread.end-cover .page.left .content {
+    height: auto;
+    min-height: auto;
+  }
+  /* Adjust typography for mobile */
+  .spread.end-cover .cover-title {
+    font-size: 2.2rem;
+  }
+  .spread.end-cover .cover-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+  }
+  .spread.end-cover .cover-logo {
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    margin: 20px 0;
+  }
+  .spread.end-cover .cover-logo::before,
+  .spread.end-cover .cover-logo::after {
+    font-size: 1rem;
+  }
+  .spread.end-cover .cover-logo::before { left: -20px; }
+  .spread.end-cover .cover-logo::after { right: -20px; }
+  .spread.end-cover .cover-message {
+    padding: 15px;
+    margin-top: 20px;
+  }
+  .spread.end-cover .cover-line {
+    font-size: 1rem;
+  }
+  /* Spine on mobile */
+  .spread.end-cover .page.right {
+    width: 100%;
+    flex: 0 0 40px;
+    border-radius: 0 0 8px 8px !important;
+    writing-mode: horizontal-tb;
+    transform: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .spread.end-cover .page.right .spine-text {
+    transform: none;
+    writing-mode: horizontal-tb;
+    white-space: normal;
+    text-align: center;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .spread.end-cover .cover-title {
+    font-size: 1.8rem;
+  }
+  .spread.end-cover .cover-logo {
+    font-size: 1.3rem;
+  }
+  .spread.end-cover .cover-line {
+    font-size: 0.9rem;
+  }
+}
+
+/* ====================
+   MOBILE RESPONSIVENESS (existing)
    ==================== */
 @media (min-width: 769px) and (max-width: 1024px) {
   .book {
